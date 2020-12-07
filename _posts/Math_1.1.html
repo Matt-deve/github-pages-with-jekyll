@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Maths Challenge</title>
+    <meta name="title" content="Maths challenge">
+    <meta name="author" content="M.Weightman">
+    <meta name="year" content="2020">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <meta charset="UTF-8">
+    <style>
+        th {
+            font-size: 150%;
+            text-align: center;
+        }
+        
+        td {
+            border: 1px solid black;
+            border-spacing: 0px;
+        }
+        
+        #displayFrame {
+            margin: 10px auto 20px;
+            text-align: center;
+            font-size: 150%;
+        }
+        
+        #fullFrame {
+            margin: auto;
+            background-color: black;
+            color: white;
+            max-width: 400px;
+            border: 3px solid black;
+            border-radius: 10px;
+        }
+        
+        #outputFrame {
+            display: flex;
+            min-width: 90%;
+            margin: 5%;
+            border: 1px solid white;
+            text-align: center;
+        }
+        
+        .outputLine {
+            margin: auto;
+            text-align: center;
+            font-size: 200%;
+            font-family: "courier";
+        }
+        
+        #keypadFrame {
+            width: 90%;
+            margin: 2%;
+            padding: 2%;
+            align-content: center;
+            border: 3px solid white;
+            border-radius: 10px;
+        }
+        
+        .keypadRow,
+        .infoBar {
+            display: flex;
+        }
+        
+        .keypadNum {
+            width: 30%;
+            margin: auto;
+            border: 1px solid white;
+            text-align: center;
+            font-size: 200%;
+        }
+        
+        #keyClr,
+        #keySub {
+            margin: 8px auto;
+            width: 50%;
+        }
+        
+        .keypadNum:hover {
+            background-color: yellow;
+            color: black;
+            cursor: pointer;
+        }
+        
+        .keypadNum:active {
+            background-color: red;
+            color: black;
+        }
+        
+        .infoBar h4 {
+            margin: auto;
+        }
+        
+        .option {
+            position: relative;
+            width: 30%;
+            margin: auto;
+            border: 3px solid #003dff;
+            padding: 5px;
+            background-color: #748eff;
+            text-align: center;
+        }
+        
+        .optionContent {
+            display: none;
+            position: absolute;
+            width: 90%;
+            border: 1px solid #003dff;
+            background-color: #5db0ff;
+            z-index: 1;
+            overflow: wrap;
+        }
+        
+        .optionContent p {
+            margin: auto;
+            border: 1px solid #003dff;
+            padding: 2px;
+        }
+        
+        .option:hover .optionContent {
+            display: block;
+        }
+        
+        .optionContent p:hover {
+            background-color: #fffb00;
+        }
+        
+        .optionContent p:active {
+            background-color: #ff0000;
+        }
+        
+        #timer {
+            display: none;
+            text-align: center;
+        }
+        
+        #displayStart:hover,
+        .option:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body onload="writeScores()">
+    <div class="infoBar">
+        <div class="option">
+            <span>Set Mode</span>
+            <h4 id="modeSet">Casual (default)</h4>
+            <div class="optionContent">
+                <p onclick="modeSet(0)">Casual</p>
+                <p onclick="modeSet(1)">Scored</p>
+                <p onclick="modeSet(2)">Timed</p>
+            </div>
+        </div>
+        <div class="option">
+            <span>Select Level</span>
+            <h4 id="levelSet">Random (default)</h4>
+            <div class="optionContent">
+                <p onclick="levelSet(0)">Random</p>
+                <p onclick="levelSet(1)">Addition and Subtraction</p>
+                <p onclick="levelSet(2)">Multiplication</p>
+                <p onclick="levelSet(3)">Simple Division</p>
+            </div>
+        </div>
+    </div>
+    <h4 id="timer"></h4>
+    <div id="displayFrame">
+        <h3 id="displayNum"></h3>
+        <h2 id="displayStart" onclick="startGame()">Click to Start</h2>
+        <h2 id="displayItem">
+    </div>
+    </h2>
+
+    <div id="fullFrame">
+        <div id="outputFrame">
+            <div class="outputLine" id="output">Input Answer</div>
+        </div>
+        <div id="keypadFrame">
+            <div class="keypadRow">
+                <div class="keypadNum" id="key1" onclick="key(1)">1</div>
+                <div class="keypadNum" id="key2" onclick="key(2)">2</div>
+                <div class="keypadNum" id="key3" onclick="key(3)">3</div>
+            </div>
+            <div class="keypadRow">
+                <div class="keypadNum" id="key4" onclick="key(4)">4</div>
+                <div class="keypadNum" id="key5" onclick="key(5)">5</div>
+                <div class="keypadNum" id="key6" onclick="key(6)">6</div>
+            </div>
+            <div class="keypadRow">
+                <div class="keypadNum" id="key7" onclick="key(7)">7</div>
+                <div class="keypadNum" id="key8" onclick="key(8)">8</div>
+                <div class="keypadNum" id="key9" onclick="key(9)">9</div>
+            </div>
+            <div class="keypadRow">
+                <div class="keypadNum" id="keyDec" onclick="key('.')">.</div>
+                <div class="keypadNum" id="key0" onclick="key(0)">0</div>
+                <div class="keypadNum" id="keySign" onclick="sign()">+/-</div>
+            </div>
+            <div class="keypadRow">
+                <div class="keypadNum" id="keyClr" onclick="clearCode()">Clear</div>
+                <div class="keypadNum" id="keySub" onclick="checkCode()">Submit</div>
+            </div>
+        </div>
+    </div>
+    <!--<div id="answer"></div>
+    <button onclick="keepScore(4)">Test keepscores function</button>-->
+    <div id="topScores"></div>
+    <button onclick="resetScores()">Reset Scoreboard</button>
+
+    <script>
+        var dn = document.getElementById("displayNum");
+        var ds = document.getElementById("displayStart");
+        var di = document.getElementById("displayItem");
+        var timer = document.getElementById("timer");
+        var number = 0;
+        var mode = "Casual";
+        var level = "Random";
+        var score = 0;
+        var endScore = 10;
+        var codeAnswer = "";
+        var codeEntered = "";
+        var keyLock = 0;
+        var t;
+        var timerOption = 60;
+        var gt = "";
+
+        function sign() {
+            if (codeEntered.length > 0) {
+                var s = parseInt(codeEntered);
+                s = s * -1;
+                codeEntered = s.toString();
+                output.innerHTML = codeEntered;
+            }
+        }
+
+        function key(n) {
+            if (keyLock == 0) {
+                codeEntered += n;
+                clearInterval(t);
+                outputFrame.style.backgroundColor = "black";
+                output.innerHTML = codeEntered;
+            }
+        }
+
+        function checkCode() {
+            if (keyLock == 0) {
+                if (mode == "Casual") {
+                    if (codeEntered == codeAnswer) {
+                        outputFrame.style.backgroundColor = "green";
+                        codeEntered = "";
+                        newQuestion();
+                        score += 1;
+                    } else {
+                        keyLock = 1;
+                        flashText();
+                        codeEntered = "";
+                    }
+                } else if (mode == "Scored") {
+                    if (codeEntered == codeAnswer) {
+                        score += 1;
+                    }
+                    if (number < endScore) {
+                        newQuestion();
+                        output.innerHTML = "Input answer";
+                    } else {
+                        di.innerHTML = score + "/" + endScore;
+                        number = 0;
+                        dn.innerHTML = "Your score";
+                        output.innerHTML = "Well done";
+                    }
+                    codeEntered = "";
+                } else if (mode == "Timed") {
+                    if (codeEntered == codeAnswer) {
+                        score += 1;
+                    }
+                    codeEntered = "";
+                    output.innerHTML = "Input answer";
+                    newQuestion();
+                }
+            }
+        }
+
+        function flashText() {
+            var reps = 9;
+            var col = 0;
+            var t = setInterval(function() {
+                if (reps > 0) {
+                    if (col == 0) {
+                        outputFrame.style.background = "red";
+                        col += 1;
+                        reps -= 1;
+                    } else if (col == 1) {
+                        outputFrame.style.background = "black";
+                        col -= 1;
+                        reps -= 1;
+                    }
+                }
+                if (reps == 0) {
+                    clearInterval(t);
+                    reps = 3;
+                    col = "black";
+                    outputFrame.style.background = "black";
+                    output.innerHTML = "Try again";
+                    keyLock = 0;
+                }
+            }, 300)
+        }
+
+        function clearCode() {
+            if (keyLock == 0) {
+                output.innerHTML = "Input Answer";
+                outputFrame.style.background = "black";
+                codeEntered = "";
+            }
+        }
+
+        /*options coding*/
+        function modeSet(m) {
+            if (gt != "") {
+                clearInterval(gt);
+            }
+            switch (m) {
+                case 0:
+                    mode = "Casual";
+                    break;
+                case 1:
+                    mode = "Scored";
+                    break;
+                case 2:
+                    mode = "Timed";
+                    timer.style.display = "block";
+                    timer.innerHTML = "60s Ready!";
+                    break;
+            }
+            document.getElementById("modeSet").innerHTML = mode;
+            number = 0;
+            ds.style.display = "block";
+            di.innerHTML = "";
+            dn.innerHTML = "";
+        }
+
+        function levelSet(l) {
+            if (gt != "") {
+                clearInterval(gt);
+            }
+            switch (l) {
+                case 0:
+                    level = "Random";
+                    break;
+                case 1:
+                    level = "Add and Sub";
+                    break;
+                case 2:
+                    level = "Multiply";
+                    break;
+                case 3:
+                    level = "Divide";
+                    break;
+            }
+            document.getElementById("levelSet").innerHTML = level;
+            number = 0;
+            ds.style.display = "block";
+            di.innerHTML = "";
+            dn.innerHTML = "";
+        }
+
+        /*Start game*/
+        function startGame() {
+            ds.style.display = "none";
+            if (mode != "Timed") {
+                timer.style.display = "none";
+            }
+            score = 0;
+            number = 0;
+            keyLock = 0;
+            if (mode == "Timed") {
+                newTimer();
+            }
+            newQuestion();
+        }
+
+        function ranNum(initial, range) {
+            var rn = Math.floor(Math.random() * range) + initial;
+            return rn;
+        }
+        /*question coding*/
+        function newQuestion() {
+            number += 1;
+            if (mode == "Scored") {
+                dn.innerHTML = "Question # " + number + " /10";
+            } else {
+                dn.innerHTML = "Question # " + number;
+            }
+            /*code for random questions*/
+            var a = ranNum(0, 11);
+            var b = ranNum(0, 11);
+            var opSelect;
+            if (level == "Add and Sub") {
+                opSelect = ranNum(0, 2);
+            } else if (level == "Multiply") {
+                opSelect = 2;
+            } else if (level == "Divide") {
+                opSelect = 3;
+            } else if (level == "Random") {
+                opSelect = ranNum(0, 4);
+            }
+
+            var ops = ["+", "-", "x", "divided by"];
+
+            switch (opSelect) {
+                case 0:
+                    codeAnswer = a + b;
+                    break;
+                case 1:
+                    codeAnswer = a - b;
+                    /*case 1: if (a > b) {
+                    	codeAnswer = a - b;
+                    	} else { codeAnswer = b - a; question = b + " " + ops[opSelect] + " " + a + " = ?";
+                    	};*/
+                    break;
+                case 2:
+                    codeAnswer = a * b;
+                    break;
+                case 3:
+                    codeAnswer = a;
+                    break;
+            }
+            var question = "";
+            if (opSelect != 3) {
+                question = a + " " + ops[opSelect] + " " + b + " = ?";
+            } else {
+                var c = a * b;
+                question = c + " " + ops[opSelect] + " " + b + " = ?";
+            }
+
+            di.innerHTML = question;
+            document.getElementById("answer").innerHTML = codeAnswer;
+        }
+        /*timer*/
+        function newTimer() {
+            var gameTimerSet = timerOption * 1000;
+            gt = setInterval(
+                function() {
+                    if (gameTimerSet > 0) {
+                        gameTimerSet -= 1000;
+                        showgt = gameTimerSet / 1000;
+                        timer.innerHTML = showgt + "s";
+                    } else {
+                        clearInterval(gt);
+                        timer.innerHTML = "Time up";
+                        keyLock = 1;
+                        number -= 1;
+                        di.innerHTML = score + "/" + number;
+                        number = 0;
+                        dn.innerHTML = "Your score";
+                        output.innerHTML = "Well done";
+                        keepScore(score);
+                    }
+                }, 1000)
+        }
+
+        /*Record scores*/
+        function keepScore(s) {
+            /*record the new scores in localstorage and write to page*/
+            var newScore = s;
+            //var newName = window.prompt("Enter your name");
+            var rn = localStorage.getItem("Names");
+            var rs = localStorage.getItem("Scores");
+            var allNames = JSON.parse(rn);
+            var allScores = JSON.parse(rs);
+            var len;
+            if (allScores == null) {
+                allNames = ["Test name"];
+                allScores = [0];
+            }
+            len = allScores.length;
+            if (len < 5) {
+                for (i = 0; i < len; i++) {
+                    if (newScore > parseInt(allScores[i])) {
+                        newName = window.prompt("Enter your name to record your score!");
+                        allScores.splice(i, 0, newScore);
+                        allNames.splice(i, 0, newName);
+                        break;
+                    }
+                }
+                allScores[len] = newScore;
+                allNames[len] = newName;
+            } else if (len > 0) {
+                for (i = 0; i < 6; i++) {
+                    if (newScore > allScores[i]) {
+                        newName = window.prompt("Enter your name to record your score!");
+                        allScores.splice(i, 0, newScore);
+                        allNames.splice(i, 0, newName);
+                        if (len + 1 > 5) {
+                            allScores = allScores.slice(0, 5);
+                            allNames = allNames.slice(0, 5);
+                        }
+                        break;
+                    }
+                }
+            } else {
+                allScores[0] = newScore;
+                allNames[0] = newName;
+            };
+            rn = JSON.stringify(allNames);
+            rs = JSON.stringify(allScores);
+            localStorage.setItem("Scores", rs);
+            localStorage.setItem("Names", rn);
+            writeScores();
+        }
+
+        function writeScores() {
+            var ws = localStorage.getItem("Scores");
+            var wn = localStorage.getItem("Names");
+            var s = JSON.parse(ws);
+            var n = JSON.parse(wn);
+            var ns = "";
+            for (i = 0; i < s.length; i++) {
+                ns += "<tr><td>" + n[i] + "</td><td>" + s[i] + "</td></tr>";
+            }
+            document.getElementById("topScores").innerHTML =
+                "<table><tr><th colspan=\"2\">Top 5 Timed Scores</th></tr>" + ns + "</table>";
+        }
+
+        function resetScores() {
+            var rs = [5, 4, 3, 2, 1];
+            var rn = ["First", "Second", "Third", "Fourth", "Fifth"];
+            var rsJ = JSON.stringify(rs);
+            var rnJ = JSON.stringify(rn);
+            localStorage.setItem("Scores", rsJ);
+            localStorage.setItem("Names", rnJ);
+            writeScores();
+        }
+        /*add tutorial option
+        /*use number to control difficulty progression*/
+    </script>
+</body>
+
+</html>
