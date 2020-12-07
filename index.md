@@ -1,4 +1,3 @@
-# Welcome to my blog
+# Landing page
 
-I'm glad you are here. I plan to talk about ...
-Some stuff, like lorem ipsum decolor....
+test page for testing
